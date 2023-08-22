@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <button @click="reverse()">{{button.text}}</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      let buttonText = "перевернуть";
+      new Vue({
+        el: "#app",
+        data: {
+          button:{
+            text: buttonText,
+          },
+        },
+        methods: {
+          reverse() {
+            const newArr = [];
+            const arr = Array.from(buttonText);
+            for (let index = 0; index < arr.length; index++) {
+              const element = arr[index];
+              newArr.unshift(element); 
+            }
+            result = newArr.join('');
+            this.button.text = result;
+            buttonText = this.button.text;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
