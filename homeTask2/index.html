@@ -1,0 +1,236 @@
+<!-- Вы разрабатываете приложение для отображения и сортировки списка товаров. 
+У вас есть массив объектов products, где каждый объект представляет товар 
+с его названием и ценой. Вам необходимо отобразить список товаров 
+и предоставить пользователю возможность сортировать товары по цене 
+(по возрастанию и по убыванию).
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="catalog" id="app">
+      <div class="product__items">
+        <div v-for="(product, i) in sortedList" :key="i" class="product__item">
+          <h1> {{product.name}}</h1>
+          <h2 class="price">Цена: {{product.price}}</h2>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <h1>Сортировка:</h1>
+        <button
+          class="btn"
+          :class="{use: useToggle1}"
+          @click="sortParam = 'priceUp', toggleUp()"
+        >
+          По возрастанию цены
+        </button>
+        <button
+          class="btn"
+          :class="{use: useToggle2}"
+          @click="sortParam = 'priceDown',toggleDown()"
+        >
+          По убыванию цены
+        </button>
+        <button class="btn btnNotSort" :class="" @click="sortParam = 'not', toggleNotSort()">
+          Без сортировки
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          useToggle1: false,
+          useToggle2: false,
+          sortParam: "",
+          products: [
+            { name: "TECNO Camon 20 Pro 5G", price: 19_990 },
+            { name: "Infinix Note 30 Pro", price: 20_990 },
+            { name: "Realme 11 Pro+", price: 39_990 },
+            { name: "Poco C51", price: 5_990 },
+            { name: "Samsung Galaxy Z Flip5", price: 109_990 },
+            { name: "Xiaomi 13 Ultra", price: 136_990 },
+          ],
+          result: [],
+        },
+        computed: {
+          sortedList() {
+            const arr = JSON.parse(JSON.stringify(this.products));
+            this.result.splice(0, this.result.length);
+            for (let i = 0; i < arr.length; i++) {
+              const element = arr[i];
+              let sortProduct = {};
+              sortProduct.name = element.name;
+              sortProduct.price = element.price;
+              this.result.push(sortProduct);
+            }
+            console.log(JSON.parse(JSON.stringify(this.result)));
+
+            switch (this.sortParam) {
+              case "priceUp":
+                return this.result.sort(sortByPriceUp);
+              case "priceDown":
+                return this.result.sort(sortByPriceDown);
+              case "not":
+                return not(this.result);
+              default:
+                return this.result;
+            }
+   
+          },
+        },
+        methods: {
+          toggleUp() {
+            if (!this.useToggle1) {
+              this.useToggle1 = !this.useToggle1;
+              this.useToggle2 = !this.useToggle1;
+            } else {
+              this.useToggle1 = this.useToggle1;
+              this.useToggle2 = !this.useToggle1;
+            }
+          },
+          toggleDown() {
+            if (!this.useToggle2) {
+              this.useToggle2 = !this.useToggle2;
+              this.useToggle1 = !this.useToggle2;
+            } else {
+              this.useToggle2 = this.useToggle2;
+              this.useToggle1 = !this.useToggle2;
+            }
+          },
+          toggleNotSort(){
+            this.useToggle1 = false;
+            this.useToggle2 = false;
+          },
+        },
+      });
+
+      let sortByPriceUp = function (a, b) {
+        return a.price > b.price ? 1 : -1;
+      };
+
+      let sortByPriceDown = function (a, b) {
+        return a.price < b.price ? 1 : -1;
+      };
+
+      let not = function (array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      };
+    </script>
+  </body>
+</html>
+
+<!-- const arr = JSON.parse(JSON.stringify(this.products)); -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="catalog" id="app">
+      <div class="product__items">
+        <div v-for="(product, i) in sortedList" :key="i" class="product__item">
+          <h1>Продукт: {{product.name}}</h1>
+          <h1>Цена: {{product.price}}</h1>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <h1>Сортировка:</h1>
+        <button
+          class="btn"
+          :class="{use: useToggle1}"
+          @click="sortParam = 'priceUp', toggleUp()"
+        >
+          По возрастанию цены
+        </button>
+        <button
+          class="btn"
+          :class="{use: useToggle2}"
+          @click="sortParam = 'priceDown',toggleDown()"
+        >
+          По убыванию цены
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          useToggle1: false,
+          useToggle2: false,
+          sortParam: "",
+          products: [
+            { name: "Молоко", price: 74 },
+            { name: "Хлеб", price: 54 },
+            { name: "Сыр", price: 209 },
+            { name: "Яйца", price: 109 },
+            { name: "Кефир", price: 80 },
+            { name: "Чай", price: 112 },
+            { name: "Кофе", price: 420 },
+            { name: "Спички", price: 0.9 },
+          ],
+        },
+        computed: {
+          sortedList() {
+            switch (this.sortParam) {
+              case "priceUp":
+                return this.products.sort(sortByPriceUp);
+              case "priceDown":
+                return this.products.sort(sortByPriceDown);
+              default:
+                return this.products;
+            }
+          },
+        },
+        methods: {
+          toggleUp() {
+            if (!this.useToggle1) {
+              this.useToggle1 = !this.useToggle1;
+              this.useToggle2 = !this.useToggle1;
+            } else {
+              this.useToggle1 = this.useToggle1;
+              this.useToggle2 = !this.useToggle1;
+            }
+          },
+          toggleDown() {
+            if (!this.useToggle2) {
+              this.useToggle2 = !this.useToggle2;
+              this.useToggle1 = !this.useToggle2;
+            } else {
+              this.useToggle2 = this.useToggle2;
+              this.useToggle1 = !this.useToggle2;
+            }
+          },
+        },
+      });
+
+      let sortByPriceUp = function (a, b) {
+        return a.price > b.price ? 1 : -1;
+      };
+      let sortByPriceDown = function (a, b) {
+        return a.price < b.price ? 1 : -1;
+      };
+    </script>
+  </body>
+</html>
+ -->
